@@ -1,10 +1,11 @@
-﻿import { claimTask } from '../../api/talent';
+import { claimTask } from '../../api/talent';
 
 const STATUS_CLASS = {
   Open:      'status-badge-Open',
   Claimed:   'status-badge-Claimed',
   Submitted: 'status-badge-Submitted',
   Approved:  'status-badge-Approved',
+  Completed: 'status-badge-Completed',
   Rejected:  'status-badge-Rejected',
 };
 
