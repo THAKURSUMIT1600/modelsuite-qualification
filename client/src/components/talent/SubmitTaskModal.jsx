@@ -1,5 +1,6 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { submitTask } from '../../api/submissions';
+import { getDueStatus } from '../../utils/dateUtils';
 
 const SubmitTaskModal = ({ task, onClose, onSubmitted }) => {
   const [file, setFile]   = useState(null);
@@ -40,7 +41,14 @@ const SubmitTaskModal = ({ task, onClose, onSubmitted }) => {
         <div className="px-6 py-3.5 bg-bg-surface border-b border-border">
           <p className="text-[14px] font-semibold text-text-primary">{task.title || 'Untitled Task'}</p>
           {task.dueDate && (
-            <p className="text-[12px] text-text-faint mt-0.5">Due: {task.dueDate}</p>
+            <div className="flex items-center gap-2 mt-0.5">
+              <p className="text-[12px] text-text-faint">Due: {task.dueDate}</p>
+              {task.status !== 'Completed' && task.status !== 'Approved' && getDueStatus(task.dueDate) && (
+                <span className={`px-1.5 py-[1px] rounded text-[10px] font-bold uppercase tracking-wider due-badge-${getDueStatus(task.dueDate).replace(' ', '')}`}>
+                  {getDueStatus(task.dueDate)}
+                </span>
+              )}
+            </div>
           )}
         </div>
 

@@ -26,14 +26,7 @@ const IconUpload = () => (
   </svg>
 );
 
-const fmtDate = (raw) => {
-  if (!raw) return null;
-  try {
-    const d = new Date(raw);
-    if (isNaN(d)) return raw;
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  } catch { return raw; }
-};
+import { fmtDate, getDueStatus } from '../../utils/dateUtils';
 
 const MyTasksList = ({ tasks, onRefresh }) => {
   const [submitTarget, setSubmitTarget] = useState(null);
@@ -73,10 +66,17 @@ const MyTasksList = ({ tasks, onRefresh }) => {
                 {task.title || 'Untitled Task'}
               </p>
               {fmtDate(task.dueDate) && (
-                <p className="flex items-center gap-1.5 text-[11.5px]" style={{ color: '#4B5563' }}>
-                  <IconCalendar />
-                  Due {fmtDate(task.dueDate)}
-                </p>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <p className="flex items-center gap-1.5 text-[11.5px]" style={{ color: '#4B5563' }}>
+                    <IconCalendar />
+                    Due {fmtDate(task.dueDate)}
+                  </p>
+                  {task.status !== 'Completed' && task.status !== 'Approved' && getDueStatus(task.dueDate) && (
+                    <span className={`px-1.5 py-[1px] rounded text-[10px] font-bold uppercase tracking-wider due-badge-${getDueStatus(task.dueDate).replace(' ', '')}`}>
+                      {getDueStatus(task.dueDate)}
+                    </span>
+                  )}
+                </div>
               )}
             </div>
 
