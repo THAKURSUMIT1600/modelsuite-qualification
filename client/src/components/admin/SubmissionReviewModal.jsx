@@ -1,6 +1,8 @@
+import React, { useState } from 'react';
 import { reviewSubmission } from '../../api/submissions';
 import { toast } from 'react-hot-toast';
 import { getDueStatus } from '../../utils/dateUtils';
+import ConfirmationModal from '../common/ConfirmationModal';
 
 const REVIEW_STATUS_CLASS = {
   Pending: 'status-badge-Submitted',
@@ -9,14 +11,25 @@ const REVIEW_STATUS_CLASS = {
 };
 
 const SubmissionReviewModal = ({ submission, onClose, onReviewed }) => {
+  const [isConfirmRejectOpen, setIsConfirmRejectOpen] = useState(false);
 
-  const handleReview = async (status) => {
+  const executeReview = async (status) => {
     try {
       await reviewSubmission(submission._id, status);
       onReviewed();
       onClose();
     } catch (err) {
       toast.error(err.response?.data?.message || 'Review action failed');
+    } finally {
+      setIsConfirmRejectOpen(false);
+    }
+  };
+
+  const handleReview = (status) => {
+    if (status === 'Rejected') {
+      setIsConfirmRejectOpen(true);
+    } else {
+      executeReview(status);
     }
   };
 
@@ -24,6 +37,7 @@ const SubmissionReviewModal = ({ submission, onClose, onReviewed }) => {
   const talent = submission.talentId || {};
 
   return (
+    <>
     <div className="fixed inset-0 bg-black/65 backdrop-blur-sm flex items-center justify-center z-[200] p-6"
       onClick={onClose}>
       <div className="bg-bg-card border border-border rounded-xl w-full max-w-lg shadow-[0_32px_80px_rgba(0,0,0,0.6)] animate-modal-in"
@@ -126,6 +140,17 @@ const SubmissionReviewModal = ({ submission, onClose, onReviewed }) => {
         </div>
       </div>
     </div>
+      <ConfirmationModal
+        isOpen={isConfirmRejectOpen}
+        title="Reject Submission"
+        message="Are you sure you want to reject this submission? The talent will be notified."
+        confirmText="Reject"
+        cancelText="Cancel"
+        onConfirm={() => executeReview('Rejected')}
+        onCancel={() => setIsConfirmRejectOpen(false)}
+        confirmButtonVariant="danger"
+      />
+    </>
   );
 };
 
