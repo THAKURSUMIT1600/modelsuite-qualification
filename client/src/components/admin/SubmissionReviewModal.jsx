@@ -1,9 +1,9 @@
 import { reviewSubmission } from '../../api/submissions';
-import { getDueStatus } from '../../utils/dateUtils';
 import { toast } from 'react-hot-toast';
+import { getDueStatus } from '../../utils/dateUtils';
 
 const REVIEW_STATUS_CLASS = {
-  Pending:  'status-badge-Submitted',
+  Pending: 'status-badge-Submitted',
   Approved: 'status-badge-Approved',
   Rejected: 'status-badge-Rejected',
 };
@@ -20,7 +20,7 @@ const SubmissionReviewModal = ({ submission, onClose, onReviewed }) => {
     }
   };
 
-  const task   = submission.taskId   || {};
+  const task = submission.taskId || {};
   const talent = submission.talentId || {};
 
   return (
@@ -55,7 +55,7 @@ const SubmissionReviewModal = ({ submission, onClose, onReviewed }) => {
                   )}
                 </div>
               )}
-              
+
               {task.status && (
                 <span className={`inline-block px-2 py-[2px] rounded-full text-[11px] font-medium status-badge-${task.status}`}>
                   {task.status}
@@ -99,7 +99,7 @@ const SubmissionReviewModal = ({ submission, onClose, onReviewed }) => {
               <a href={submission.fileUrl} target="_blank" rel="noreferrer"
                 className="flex items-center gap-2.5 text-[13px] text-primary font-medium hover:text-secondary transition-colors">
                 <span className="text-base">📎</span>
-                
+
                 <span className="underline underline-offset-2 truncate">{submission.fileUrl}</span>
                 <span className="text-text-faint text-[11px] shrink-0">↗ open</span>
               </a>
