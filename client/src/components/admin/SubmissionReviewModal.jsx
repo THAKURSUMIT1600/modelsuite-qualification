@@ -1,4 +1,5 @@
-﻿import { reviewSubmission } from '../../api/submissions';
+import { reviewSubmission } from '../../api/submissions';
+import { getDueStatus } from '../../utils/dateUtils';
 
 const REVIEW_STATUS_CLASS = {
   Pending:  'status-badge-Submitted',
@@ -44,7 +45,14 @@ const SubmissionReviewModal = ({ submission, onClose, onReviewed }) => {
             <p className="text-[15px] font-semibold text-text-primary">{task.title || '—'}</p>
             <div className="flex items-center gap-3 mt-2">
               {task.dueDate && (
-                <span className="text-[12px] text-text-faint">Due: {task.dueDate}</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-[12px] text-text-faint">Due: {task.dueDate}</span>
+                  {task.status !== 'Completed' && task.status !== 'Approved' && getDueStatus(task.dueDate) && (
+                    <span className={`px-1.5 py-[1px] rounded text-[10px] font-bold uppercase tracking-wider due-badge-${getDueStatus(task.dueDate).replace(' ', '')}`}>
+                      {getDueStatus(task.dueDate)}
+                    </span>
+                  )}
+                </div>
               )}
               
               {task.status && (

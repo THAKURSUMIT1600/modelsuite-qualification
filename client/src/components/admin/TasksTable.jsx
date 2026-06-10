@@ -22,15 +22,7 @@ const AVATAR_COLORS = [
 ];
 const getAvatarGradient = (name = '') => AVATAR_COLORS[name.charCodeAt(0) % AVATAR_COLORS.length];
 
-/* ── Date formatter ── */
-const fmtDate = (raw) => {
-  if (!raw) return '—';
-  try {
-    const d = new Date(raw);
-    if (isNaN(d)) return raw;
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  } catch { return raw; }
-};
+import { fmtDate, getDueStatus } from '../../utils/dateUtils';
 
 /* ── Status badge class ── */
 const STATUS_CLASS = {
@@ -127,7 +119,14 @@ const TasksTable = ({ tasks, onEdit, onRefresh }) => {
 
               {/* Due date */}
               <td className="table-td" style={{ color: '#6B7280', whiteSpace: 'nowrap' }}>
-                {fmtDate(task.dueDate)}
+                <div className="flex items-center gap-2">
+                  <span>{fmtDate(task.dueDate)}</span>
+                  {task.status !== 'Completed' && task.status !== 'Approved' && getDueStatus(task.dueDate) && (
+                    <span className={`inline-block px-1.5 py-[1px] rounded text-[10px] font-bold uppercase tracking-wider due-badge-${getDueStatus(task.dueDate).replace(' ', '')}`}>
+                      {getDueStatus(task.dueDate)}
+                    </span>
+                  )}
+                </div>
               </td>
 
               {/* Created */}
